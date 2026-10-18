@@ -1,14 +1,30 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, useRef, useEffect, ReactNode } from 'react';
 import type { CallState, CallRecord } from '../types';
-import { addCallRecord, getCallOutcomes, addCallOutcome } from '../utils/storage';
-import { formatDuration, generateId } from '../utils/formatters';
+import { addCallRecord, addCallOutcome } from '../utils/storage';
+import { generateId } from '../utils/formatters';
 
-export function useCall() {
+interface CallContextType {
+  callState: CallState;
+  audioLevel: number;
+  startCall: (leadId: string) => Promise<boolean>;
+  endCall: (outcome?: string, notes?: string) => Promise<{ leadId?: string; duration: number }>;
+  toggleMute: () => void;
+  resetCall: () => void;
+  getFormattedTimer: () => string;
+  isActive: boolean;
+  isConnected: boolean;
+}
+
+const CallContext = createContext<CallContextType | null>(null);
+
+export function CallProvider({ children }: { children: ReactNode }) {
   const [callState, setCallState] = useState<CallState>({
     status: 'idle',
     timer: 0,
     muted: false
   });
+  
+  const [audioLevel, setAudioLevel] = useState(0);
   
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<Date | null>(null);
@@ -16,7 +32,6 @@ export function useCall() {
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
-  const [audioLevel, setAudioLevel] = useState(0);
 
   const startTimer = useCallback(() => {
     startTimeRef.current = new Date();
@@ -208,7 +223,7 @@ export function useCall() {
     };
   }, []);
 
-  return {
+  const value: CallContextType = {
     callState,
     audioLevel,
     startCall,
@@ -219,4 +234,18 @@ export function useCall() {
     isActive: callState.status === 'calling' || callState.status === 'connecting' || callState.status === 'connected',
     isConnected: callState.status === 'connected'
   };
+
+  return (
+    <CallContext.Provider value={value}>
+      {children}
+    </CallContext.Provider>
+  );
+}
+
+export function useCall() {
+  const context = useContext(CallContext);
+  if (!context) {
+    throw new Error('useCall must be used within a CallProvider');
+  }
+  return context;
 }

@@ -30,7 +30,6 @@ export function TopNav({ onSidebarToggle, sidebarCollapsed }: TopNavProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showCallBar, setShowCallBar] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
   const searchRef = useRef<HTMLInputElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
@@ -48,14 +47,6 @@ export function TopNav({ onSidebarToggle, sidebarCollapsed }: TopNavProps) {
       applyTheme(savedTheme);
     }
   }, []);
-
-  useEffect(() => {
-    if (callState.status === 'calling' || callState.status === 'connecting' || callState.status === 'connected') {
-      setShowCallBar(true);
-    } else if (callState.status === 'ended' || callState.status === 'idle') {
-      setShowCallBar(false);
-    }
-  }, [callState.status]);
 
   const applyTheme = (newTheme: 'light' | 'dark' | 'system') => {
     const root = document.documentElement;
@@ -219,7 +210,7 @@ export function TopNav({ onSidebarToggle, sidebarCollapsed }: TopNavProps) {
         </div>
       </header>
 
-      {showCallBar && isConnected && (
+      {isConnected && (
         <div
           className={classNames(
             'fixed top-16 left-0 right-0 z-50 bg-blue-600 text-white px-4 py-2 transition-all duration-200',
