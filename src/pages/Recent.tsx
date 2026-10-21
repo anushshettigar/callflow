@@ -109,7 +109,7 @@ export function Recent() {
     const lead = getLeadById(call.leadId);
     if (lead) {
       setSelectedCall(call);
-      const success = await startCall(lead.id);
+      const success = await startCall(lead.id, lead.phone);
       if (!success) {
         addToast({
           type: 'error',

@@ -69,7 +69,7 @@ export function LeadsModal({ isOpen, onClose, initialLeadId, onCall }: LeadsModa
     if (onCall) {
       onCall(lead);
     } else {
-      const success = await startCall(lead.id);
+      const success = await startCall(lead.id, lead.phone);
       if (!success) {
         addToast({
           type: 'error',

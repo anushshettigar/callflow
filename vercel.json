@@ -1,0 +1,20 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "regions": ["iad1"],
+  "functions": {
+    "api/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "TWILIO_ACCOUNT_SID": "@twilio_account_sid",
+    "TWILIO_AUTH_TOKEN": "@twilio_auth_token",
+    "TWILIO_API_KEY_SID": "@twilio_api_key_sid",
+    "TWILIO_API_KEY_SECRET": "@twilio_api_key_secret",
+    "TWIML_APP_SID": "@twiml_app_sid",
+    "TWILIO_CALLER_ID": "@twilio_caller_id"
+  }
+}

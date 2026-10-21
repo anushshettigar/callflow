@@ -128,7 +128,7 @@ export function CallsToMake() {
 
   const handleCall = async (lead: Lead) => {
     setSelectedLead(lead);
-    const success = await startCall(lead.id);
+    const success = await startCall(lead.id, lead.phone);
     if (!success) {
       addToast({
         type: 'error',
