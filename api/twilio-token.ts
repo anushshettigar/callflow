@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { AccessToken } from 'twilio/lib/jwt/AccessToken';
+import { AccessToken } from 'twilio/lib/jwt/AccessToken.js';
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   const { TWILIO_ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, TWIML_APP_SID } = process.env;
